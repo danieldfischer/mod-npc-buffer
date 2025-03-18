@@ -137,7 +137,7 @@ public:
     /** Get the most level-appropriate spell from the chain, 
      * based on character level compared to max level (MaxLevel)
      *  */
-    static uint GetSpellForLevel(uint32 spell_id, Player *player)
+    static uint32 GetSpellForLevel(uint32 spell_id, Player *player)
     {
         uint32 level = player->GetLevel();
 
@@ -235,7 +235,25 @@ public:
             return false;
         }
 
-        // Who are we dealing with?
+        ClearGossipMenuFor(player);
+        AddGossipItemFor(player, GOSSIP_ICON_MONEY_BAG, "Full Buffs!", GOSSIP_SENDER_MAIN, 901, "Full Buffs?", 5000 * player->GetLevel(), false); // sConfigMgr->GetOption<int32>("XXXCost", 1000000)
+
+        SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+        return true;
+    }
+
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
+    {
+        switch (action)
+        {
+        case 901: FullBuffs(player, creature);
+        }
+        return true;
+    }
+
+    bool FullBuffs(Player* player, Creature* creature)
+    {
+    // Who are we dealing with?
         std::string CreatureWhisper = "Init";
         std::string PlayerName = player->GetName();
 
